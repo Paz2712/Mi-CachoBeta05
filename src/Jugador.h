@@ -36,6 +36,7 @@ public:
     void setSeRespeta() {
         lanzamiento--;
     }
+    
 
     virtual int jugar(const std::map<std::string, Marcador>& marcadores,
                       const std::vector<Actuacion>& actuacionesPosibles,
