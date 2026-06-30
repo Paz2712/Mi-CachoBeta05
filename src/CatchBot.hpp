@@ -17,13 +17,12 @@
 class CatchBot : public Jugador
 {
 private:
-  std::string nombreE = "Isidora Garcia Paz Perez, rol:202573029-4, parCatedra:2";
+  std::string nombreE;
 
 public:
+  CatchBot(){nombreE = "Isidora Garcia Paz Perez, rol:202573029-4, parCatedra:2";}
   std::string GetNombreEst() const
-  {
-    return nombreE;
-  }
+  {return nombreE;}
 
   CatchBot(std::string nom = "CatchBot") : Jugador(nom) { nombre = nom; }
   int turnoIn = 0;
