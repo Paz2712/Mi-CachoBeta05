@@ -245,11 +245,6 @@ public:
             const std::vector<int> &dados /*dados*/,
             const Anotacion &resPrev /*resultadoPrevio*/) override
   {
-    // yaAnotado()buscar si jugada ya hecha
-
-    // CatchBot.Actuacion("lanzar", {' ', -1}, {0, 2, 4}, false);
-
-    // actuacionesPosibles[casos].displayCompacto();
 
     // si debo relanzar dados como se debe ver mi jugada, clase hecha para ser modificada y luego igualada a la jugada ideal
     Actuacion change("lanzar", {" ", -1}, {0, 1, 2, 3, 4}, false);
@@ -280,17 +275,19 @@ public:
         {
           return casos;
         }
-        else
-        {
+      }
+      for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+      {
           change.indiceDados = Pos(dados, ddsExp, "grande");
           for (int i = 0; i < actuacionesPosibles.size(); i++)
           {
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
+          break;
         }
-      }
-    }
+      } 
+      
 
     // poker
     if (ddsExp.size() <= 3)
@@ -301,16 +298,18 @@ public:
         {
           return casos;
         }
-        else
-        {
+      }
+      for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+      {
           change.indiceDados = Pos(dados, ddsExp, "poker");
           for (int i = 0; i < actuacionesPosibles.size(); i++)
           {
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
-        }
+          break;
       }
+        
     }
 
     // full
@@ -322,7 +321,8 @@ public:
         {
           return casos;
         }
-        else
+      }
+      for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
         {
           change.indiceDados = Pos(dados, ddsExp, "full");
           for (int i = 0; i < actuacionesPosibles.size(); i++)
@@ -330,8 +330,8 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
+          break;
         }
-      }
     }
 
     // senas
@@ -344,7 +344,8 @@ public:
         {
           return casos;
         }
-        else
+      }
+      for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
         {
           change.indiceDados = Pos5grandes(dados, 6);
           for (int i = 0; i < actuacionesPosibles.size(); i++)
@@ -352,8 +353,8 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
+          break;
         }
-      }
     }
 
     // escalera
@@ -365,31 +366,132 @@ public:
         {
           return casos;
         }
-        else
-        {
-          break;
-          if (escala[0])
-
-            return 0;
-        }
       }
+      for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+        {
+          change.indiceDados = incontiniudad(dados, escala[1]);
+          for (int i = 0; i < actuacionesPosibles.size(); i++)
+          {
+            if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
+              return i;
+          }
+          break;
+        }
     }
 
-    // unos trenes etc....
+    // "balas","tontos","trenes","cuadras","quinas"
     if (ddsExp.size() <= 3)
     {
-      for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+      for (int q = 0; q < 5; q++)
       {
-        // actuacionesPosibles[casos].displayCompacto(); for(const auto& dado: dados);
-        if (actuacionesPosibles[casos].accion == "anotar")
-        {
-          const std::string jugada = actuacionesPosibles[casos].anotacion.juego;
-          // if(jugada=="balas","tontos", "trenes", "cuadras", "quinas", "senas")
+        //quinas
+        if(q==0){
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+          {
+            if (actuacionesPosibles[casos].accion == "anotar" && actuacionesPosibles[casos].anotacion.juego == "quinas" && actuacionesPosibles[casos].anotacion.puntos >= 20)
+            {
+              return casos;
+            }
+          }
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+            {
+              change.indiceDados = Pos5grandes(dados, 5);
+              for (int i = 0; i < actuacionesPosibles.size(); i++)
+              {
+                if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
+                  return i;
+              }
+              break;
+            }
+        }
+
+        //cuadras
+        if(q==1){
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+          {
+            if (actuacionesPosibles[casos].accion == "anotar" && actuacionesPosibles[casos].anotacion.juego == "cuadras" && actuacionesPosibles[casos].anotacion.puntos >= 16)
+            {
+              return casos;
+            }
+          }
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+            {
+              change.indiceDados = Pos5grandes(dados, 4);
+              for (int i = 0; i < actuacionesPosibles.size(); i++)
+              {
+                if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
+                  return i;
+              }
+              break;
+            }
+        }
+
+        //trenes
+        if(q==2){
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+          {
+            if (actuacionesPosibles[casos].accion == "anotar" && actuacionesPosibles[casos].anotacion.juego == "trenes" && actuacionesPosibles[casos].anotacion.puntos >= 12)
+            {
+              return casos;
+            }
+          }
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+            {
+              change.indiceDados = Pos5grandes(dados, 3);
+              for (int i = 0; i < actuacionesPosibles.size(); i++)
+              {
+                if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
+                  return i;
+              }
+              break;
+            }
+        }
+
+        //tontos
+        if(q==3){
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+          {
+            if (actuacionesPosibles[casos].accion == "anotar" && actuacionesPosibles[casos].anotacion.juego == "tontos" && actuacionesPosibles[casos].anotacion.puntos >= 8)
+            {
+              return casos;
+            }
+          }
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+            {
+              change.indiceDados = Pos5grandes(dados, 2);
+              for (int i = 0; i < actuacionesPosibles.size(); i++)
+              {
+                if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
+                  return i;
+              }
+              break;
+            }
+        }
+
+        //balas
+        if(q==4){
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+          {
+            if (actuacionesPosibles[casos].accion == "anotar" && actuacionesPosibles[casos].anotacion.juego == "balas" && actuacionesPosibles[casos].anotacion.puntos >= 4)
+            {
+              return casos;
+            }
+          }
+          for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
+            {
+              change.indiceDados = Pos5grandes(dados, 1);
+              for (int i = 0; i < actuacionesPosibles.size(); i++)
+              {
+                if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
+                  return i;
+              }
+              break;
+            }
         }
       }
     }
 
-    // std::cout << "fin turno\n"; retorno emergencia
+    // retorno emergencia
     return actuacionesPosibles.size() - 1;
   }
 };
