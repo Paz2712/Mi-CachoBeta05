@@ -13,13 +13,14 @@
 #include <string>
 #include <vector>
 #include <cmath>
-
+/**/
 class CatchBot : public Jugador
 {
 private:
   std::string nombreE;
 
 public:
+/* nombre alumno :) */
   CatchBot(){nombreE = "Isidora Garcia Paz Perez, rol:202573029-4, parCatedra:2";}
   std::string GetNombreEst() const
   {return nombreE;}
@@ -27,7 +28,7 @@ public:
   CatchBot(std::string nom = "CatchBot") : Jugador(nom) { nombre = nom; }
   int turnoIn = 0;
 
-  // continuidad escalera, es posible crear una escalera o vamos muy mal
+  /* en esta funcion se leen los dados de izq->der y der->izq para verificar si hay posivilidad de realizar una escalera, en el caso de que si se pueda se da un booleano extra que dice como se debe leer los dados*/
   std::vector<bool> continiudad(const std::vector<int> &dados)
   {
     std::vector<int> temp;
@@ -67,11 +68,11 @@ public:
     return {false, false};
   }
 
-  // posicion mala escalera, SE PUEDE CREAR UNA ESCALERA!! que dados hemos de lanzar
+  /* SE PUEDE CREAR UNA ESCALERA!! que dados no son continuos y en que posicion estan, con esta funcion obtenemos la posicion e los dados que no son continuos*/
   std::vector<int> incontiniudad(const std::vector<int> &dados, bool lectura)
   {
     int cont = 0;
-    std::vector<std::vector<int>> temp;
+    std::vector<std::vector<int>> temp; /* matriz con dado y pos original de dado */
     for (const auto &dado : dados)
     {
       temp.push_back({dado, cont});
@@ -81,27 +82,27 @@ public:
     sort(temp.begin(), temp.end());
 
     if (lectura)
-    { // {1,3,4,5,6} lectura de dados normal <--
-      cont = temp.size() - 1;
-      std::vector<int> fin = temp.at(cont);
+    { // {1,3,4,5,6} lectura de dados normal der<--izq
+      cont = temp.size() - 1; 
+      std::vector<int> fin = temp.at(cont);//ultima pos -> 6 pivote
       int start = fin[0];
       for (int i = cont; 0 <= i; i--, start--)
       {
-        if ((temp.at(i))[0] != start)
+        if ((temp.at(i))[0] != start)// para ver la continuidad hacemos un for y le vamos restando al pivote 1
         {
           pos.push_back((temp.at(i))[1]);
         }
       }
     }
     else
-    { // {1,2,3,4,6} lectura de dados revez -->
+    { // {1,2,3,4,6} lectura de dados revez der-->izq
       std::vector<int> inicio = temp.at(0);
-      int start = inicio[0];
+      int start = inicio[0];//pos inicial ->1 pivote
       for (auto dado : temp)
       {
         if (dado[0] != start)
         {
-          pos.push_back(dado[1]);
+          pos.push_back(dado[1]);// para ver la continuidad hacemos un for y le vamos sumamos al pivote 1
         }
         start++;
         cont++;
@@ -111,7 +112,8 @@ public:
     return pos;
   }
 
-  // rep de numeros, que numeros se repiten, cuantas veces
+  /*rep de numeros, que numeros se repiten, cuantas veces? El tamaño del map permite inferir rápidamente qué jugadas son posibles: tamaño 1 o 2 sugiere una grande o un póker
+  ya que 2 --> map=<3,3>,<2,2>/dado={3,3,3,2,2} o 3--> map=<3,2>,<1,2>,<2,1>/dado={3,3,1,2,1}*/
   std::map<int, int> iguales(const std::vector<int> &dados)
   {
     std::map<int, int> rep;
@@ -133,12 +135,12 @@ public:
     return rep;
   }
 
-  // que dados he de relanzar
+  // que dados he de relanzar si es posible una jugada
   std::vector<int> Pos(const std::vector<int> &dados, std::map<int, int> map, std::string jugada)
   {
 
     // jugada de grande1/2
-    std::vector<int> Rpos;
+    std::vector<int> Rpos; //obtenemos el valor con mayor repeticiones y lo comparamos, si el numero es distinto al mas repetido guarda la posicion
     if (jugada == "grande" || jugada == "grande2")
     {
       int max = -1, numMax;
@@ -166,12 +168,12 @@ public:
       int max = -1, numMax, numMin = 0;
       for (auto dad : map)
       {
-        if (dad.second > max)
+        if (dad.second > max) //obtenemos el valor con mayor repeticiones y lo comparamos
         {
           max = dad.second;
           numMax = dad.first;
         }
-        if (dad.second == 1)
+        if (dad.second == 1)//si ya hay un numero que se repite una vez se guarda como segundo num que no se lanza
         {
           numMin = dad.first;
         }
@@ -182,7 +184,7 @@ public:
         if (dados[i] != numMax && dados[i] != numMin)
         {
           Rpos.push_back(i);
-          if (numMin == 0)
+          if (numMin == 0)//si no hay un numero que se repite una vez y el numMax se repite mas 3 veces se lanza el primer numero que no es el nummax
             break;
         }
       }
@@ -191,20 +193,21 @@ public:
       return Rpos;
     }
     // jugada full
+    /*Guarda los dos números con más repeticiones y lanza solo el dado que no pertenece a ninguno de los dos grupos con mayor repeticion*/
     if (jugada == "full")
     {
       int max = -1, numMax;
       int numMax2;
       for (auto dad : map)
       {
-        if (dad.second > max)
+        if (dad.second > max)//si ya hay un num repetido 2 o 3 veces
         {
           max = dad.second;
           numMax = dad.first;
         }
-        if (dad.first != numMax || dad.second < max)
+        if (dad.first != numMax || dad.second < max)// en el caso que un num se rep 3 y el resto una vez agarra el primer numero que sea distinto al mas repetido para no lanzarlo
           numMax2 = dad.first;
-        if (dad.second == max)
+        if (dad.second == max)//si hay dos nums repetidos 2 veces guarda el segundo numero que se repite 2 veces
         {
           numMax2 = dad.first;
         }
@@ -225,6 +228,7 @@ public:
   }
 
   // jugada de "balas","tontos","trenes", "cuadras", "quinas", "senas"
+  /* ya que todas requieren repetir un número específico; se pasa el número objetivo 1,2,3,4 y se obtienen las posiciones de los dados que no coinciden */
   std::vector<int> Pos5grandes(const std::vector<int> &dados, int numMax)
   {
     std::vector<int> Rpos;
@@ -249,8 +253,9 @@ public:
     Actuacion change("lanzar", {" ", -1}, {0, 1, 2, 3, 4}, false);
     // cuanto se repiten los dados esta partida
     std::map<int, int> ddsExp = iguales(dados);
-    // hay posivilidad de escalera
+    // hay posivilidad de escalera? si la hay como debo leer los dados
     std::vector<bool> escala = continiudad(dados);
+
 
     // hay dormida, solo corre si es primer turno
     if (turnoIn < 1)
@@ -265,8 +270,12 @@ public:
       turnoIn++;
     }
 
+    //El bot siempre intenta primero el puntaje máximo de mano por lo cual ve todas las opciones posibles, si no es posible anotar al inicio verifica si se puede crear alguna tirada de hueva;
+    //el caso de tonton,balas, senas solo anotara si hay 4 o mas dados iguales dado que el puntaje no combia si es de mano o huevo
+    //esta es la forma que trabaja con todas las jugadas, se puede hacer de mano; no, puedo crear un lanzamiento de hueva, lanzamos si podemos. y asi hasta que esten anotados la mayoria de cosas
+
     // grande1 y 2
-    if (ddsExp.size() < 3)
+    if (ddsExp.size() < 3)// ya hay jugada con map= <num,5> o se puede hacer crear jugada con map = <num1,3>,<num2,2>
     {
       for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
       {
@@ -289,7 +298,7 @@ public:
       
 
     // poker
-    if (ddsExp.size() <= 3)
+    if (ddsExp.size() <= 3 || ddsExp.size()!=1) // ya hay jugada con map= <num1,4>,<num2,1> o se puede hacer crear jugada con map = <>,<>,<> 
     {
       for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
       {
@@ -312,7 +321,7 @@ public:
     }
 
     // full
-    if (ddsExp.size() >= 2 || ddsExp.size() <= 4)
+    if (ddsExp.size() >= 2 || ddsExp.size() <= 4) // ya hay jugada con map= <num1,2>,<num2,3> o se puede hacer crear jugada con map = <>,<>,<> o <>,<>,<>,<>
     {
       for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
       {
@@ -338,7 +347,7 @@ public:
     {
       for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
       {
-        // actuacionesPosibles[casos].displayCompacto(); for(const auto& dado: dados);
+
         if (actuacionesPosibles[casos].accion == "anotar" && actuacionesPosibles[casos].anotacion.juego == "senas" && actuacionesPosibles[casos].anotacion.puntos >= 24)
         {
           return casos;
