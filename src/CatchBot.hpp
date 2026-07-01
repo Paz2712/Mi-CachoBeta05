@@ -60,11 +60,11 @@ public:
     if (contDer > 3)
     {
       return {true, true};
-    } // {1,3,4,5,6} lectura de dados normal
+    } // {1,3,4,5,6} lectura de dados normal izq<-der
     if (contIzq > 3)
     {
       return {true, false};
-    } // {1,2,3,4,6} lectura de dados revez
+    } // {1,2,3,4,6} lectura de dados revez izq->der
     return {false, false};
   }
 
@@ -298,7 +298,7 @@ public:
       
 
     // poker
-    if (ddsExp.size() <= 3 || ddsExp.size()!=1) // ya hay jugada con map= <num1,4>,<num2,1> o se puede hacer crear jugada con map = <>,<>,<> 
+    if (ddsExp.size() <= 3 && ddsExp.size()!=1) // ya hay jugada con map= <num1,4>,<num2,1> o se puede hacer crear jugada con map = <>,<>,<> 
     {
       for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
       {
@@ -321,7 +321,7 @@ public:
     }
 
     // full
-    if (ddsExp.size() >= 2 || ddsExp.size() <= 4) // ya hay jugada con map= <num1,2>,<num2,3> o se puede hacer crear jugada con map = <>,<>,<> o <>,<>,<>,<>
+    if (ddsExp.size() >= 2 && ddsExp.size() <= 4) // ya hay jugada con map= <num1,2>,<num2,3> o se puede hacer crear jugada con map = <>,<>,<> o <>,<>,<>,<>
     {
       for (size_t casos = 0; casos < actuacionesPosibles.size(); casos++)
       {
