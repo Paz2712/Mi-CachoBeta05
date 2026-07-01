@@ -292,7 +292,7 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
-          break;
+          break;//revisamos si se puede realizar ese lanzamiento con los dados que debemos mantener si no se puede salimos del ciclo
         }
       } 
       
@@ -315,7 +315,7 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
-          break;
+          break;//revisamos si se puede realizar ese lanzamiento con los dados que debemos mantener si no se puede salimos del ciclo
       }
         
     }
@@ -338,7 +338,7 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
-          break;
+          break;//revisamos si se puede realizar ese lanzamiento con los dados que debemos mantener si no se puede salimos del ciclo
         }
     }
 
@@ -361,7 +361,7 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
-          break;
+          break;//revisamos si se puede realizar ese lanzamiento con los dados que debemos mantener si no se puede salimos del ciclo
         }
     }
 
@@ -383,14 +383,14 @@ public:
             if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
               return i;
           }
-          break;
+          break;//revisamos si se puede realizar ese lanzamiento con los dados que debemos mantener si no se puede salimos del ciclo
         }
     }
 
     // "balas","tontos","trenes","cuadras","quinas"
     if (ddsExp.size() <= 3)
     {
-      for (int q = 0; q < 5; q++)
+      for (int q = 0; q < 5; q++)// revisamos individualmente cada jugada de la que da mas punto a la que da menos puntos
       {
         //quinas
         if(q==0){
@@ -409,7 +409,7 @@ public:
                 if (actuacionesPosibles[i].indiceDados == change.indiceDados && actuacionesPosibles[i].accion == change.accion)
                   return i;
               }
-              break;
+              break;//revisamos si se puede realizar ese lanzamiento con los dados que debemos mantener si no se puede salimos del ciclo
             }
         }
 
