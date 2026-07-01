@@ -16,7 +16,7 @@ int main()
         { return std::make_shared<CatchBot>("CatchBot"); });
     t.addPlayer(
         []()
-        { return std::make_shared<JugadorAleatorio>("Best"); });
+        { return std::make_shared<JugadorAleatorio>("Bot"); });
     std::cout << "Starting simulation with 3 Random Players (100 matches)..."
               << std::endl;
 
